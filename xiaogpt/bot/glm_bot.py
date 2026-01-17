@@ -11,13 +11,13 @@ from xiaogpt.bot.base_bot import BaseBot, ChatHistoryMixin
 
 class GLMBot(ChatHistoryMixin, BaseBot):
     name = "Chat GLM"
-    default_options = {"model": "glm-4"}  # Change glm model here
+    default_options = {"model": "glm-4.5-flash"}  # Change glm model here
 
     def __init__(self, glm_key: str) -> None:
-        from zhipuai import ZhipuAI
+        from zai import ZaiClient
 
         self.history = []
-        self.client = ZhipuAI(api_key=glm_key)
+        self.client = ZaiClient(api_key=glm_key)
 
     @classmethod
     def from_config(cls, config):
@@ -34,6 +34,9 @@ class GLMBot(ChatHistoryMixin, BaseBot):
             print(str(e))
             return
         message = r.choices[0].message.content
+        if message is None:
+            print("Error: Received None content from API")
+            return ""
 
         self.add_message(query, message)
         print(message)
@@ -53,6 +56,8 @@ class GLMBot(ChatHistoryMixin, BaseBot):
         full_content = ""
         for chunk in r:
             content = chunk.choices[0].delta.content
+            if content is None:
+                continue
             full_content += content
             print(content, end="")
             yield content

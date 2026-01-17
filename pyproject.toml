@@ -16,7 +16,7 @@ dependencies = [
     "openai>=1",
     "aiohttp",
     "rich",
-    "zhipuai>=2.0.1",
+    "zai-sdk>=0.1.0",
     "httpx[socks]",
     "langchain>=0.0.343",
     "beautifulsoup4>=4.12.0",
